@@ -32,8 +32,6 @@ namespace Sim
 
             mainWorld.SpawnEntity(new EntityMiner(new Vec3d(1, 1, 0)));
 
-            timer.FastForward = 1;
-
             worldRegistry.Add(mainWorld);
 
             while(IsRunning)
@@ -51,10 +49,10 @@ namespace Sim
 
                 renderer.Render(mainWorld.RenderableChildren);
 
-                var sleepTime = timer.GetNextTickInMs() * 0.75;
+                var sleepTime = (int)(timer.GetNextTickInMs() * 0.75);
                 if(sleepTime > 0)
                 {
-                    System.Threading.Thread.Sleep((int)(sleepTime));
+                    System.Threading.Thread.Sleep(sleepTime);
                 }
             }
         }
