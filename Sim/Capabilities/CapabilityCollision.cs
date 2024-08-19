@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Sim.Capabilities
 {
-    public class CapabilityCollision : ICapability
+    public class CapabilityCollision : BaseCapability
     {
         public IList<CollisionLayers> Layers { get; private set; }
         public IEntity Entity { get; set; }
@@ -36,7 +36,7 @@ namespace Sim.Capabilities
             Layers = layers;
         }
 
-        public void Tick()
+        public override void Tick()
         {
             
         }

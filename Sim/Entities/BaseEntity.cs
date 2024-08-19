@@ -11,7 +11,8 @@ namespace Sim.Entities
 {
     public abstract class BaseEntity : IEntity
     {
-        public IList<IRenderable> RenderableChildren => renderableChildren;
+        public IList<IRenderable> RenderableChildren { get; } = new List<IRenderable>();
+
         private Vec3d position = Vec3d.Zero;
         public Vec3d Position
         {
@@ -24,12 +25,9 @@ namespace Sim.Entities
             }
         }
 
-        public IList<ICapability> Capabilities => new List<ICapability>();
+        public IList<ICapability> Capabilities { get; } = new List<ICapability>();
 
         public World.World World { get; set; }
-
-        private IList<IRenderable> renderableChildren = new List<IRenderable>();
-        private IList<ICapability> capabilities = new List<ICapability>();
 
         public void UpdatePosition(Action updateFunction)
         {
@@ -40,18 +38,19 @@ namespace Sim.Entities
 
         public void AddCapability(ICapability capability)
         {
-            if(capabilities.Any(c => c.GetType() == capability.GetType()))
+            if(Capabilities.Any(c => c.GetType() == capability.GetType()))
             {
                 return;
             }
 
             capability.Entity = this;
-            capabilities.Add(capability);
+            Capabilities.Add(capability);
+            capability.OnAttached();
         }
 
         public T GetCapability<T>() where T : ICapability
         {
-            return capabilities.OfType<T>().FirstOrDefault();
+            return Capabilities.OfType<T>().FirstOrDefault();
         }
 
         public bool HasCapability<T>() where T : ICapability
@@ -61,7 +60,7 @@ namespace Sim.Entities
 
         public void TickCapabilities()
         {
-            foreach(var capability in capabilities)
+            foreach(var capability in Capabilities)
             {
                 capability.Tick();
             }

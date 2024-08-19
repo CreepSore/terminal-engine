@@ -19,5 +19,7 @@ namespace Sim.Capabilities
         /// Will only be called if the capability parent is an <see cref="IEntity"/>
         /// </summary>
         new void Tick();
+
+        void OnAttached();
     }
 }

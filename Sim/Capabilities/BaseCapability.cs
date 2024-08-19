@@ -11,11 +11,16 @@ namespace Sim.Capabilities
 {
     public abstract class BaseCapability : ICapability
     {
-        public IWithPosition PositionObject => Entity != null ? (IWithPosition)Entity: Object;
+        public IWithPosition PositionObject => Entity != null ? (IWithPosition)Entity : Object;
+        public ICapabilityObject CapabilityObject => Entity != null ? (ICapabilityObject)Entity : Object;
 
         public IEntity Entity { get; set; }
         public IObject Object { get; set; }
 
         public abstract void Tick();
+        public virtual void OnAttached()
+        {
+            
+        }
     }
 }

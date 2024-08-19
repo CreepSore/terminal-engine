@@ -37,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -46,6 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -58,9 +60,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Capabilities\CapabilityInventory.cs" />
     <Compile Include="Capabilities\CapabilityAttack.cs" />
     <Compile Include="Capabilities\BaseCapability.cs" />
     <Compile Include="Capabilities\CapabilityCollision.cs" />
+    <Compile Include="Capabilities\CapabilityMineable.cs" />
     <Compile Include="Capabilities\ICapability.cs" />
     <Compile Include="Capabilities\ICapabilityObject.cs" />
     <Compile Include="Capabilities\IWithCapabilities.cs" />
@@ -79,6 +83,13 @@
     <Compile Include="Entities\States\StateWalking.cs" />
     <Compile Include="Entities\utils\EntityTimerDisplay.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Items\IItem.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemCategory.cs" />
+    <Compile Include="Items\Items.cs" />
+    <Compile Include="Items\ItemStack.cs" />
+    <Compile Include="Items\ItemType.cs" />
+    <Compile Include="Items\LootTable.cs" />
     <Compile Include="Logic\ITickable.cs" />
     <Compile Include="Logic\IWithPosition.cs" />
     <Compile Include="Logic\State\IState.cs" />
@@ -86,6 +97,7 @@
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="Objects\IObject.cs" />
+    <Compile Include="Objects\ObjectItemBag.cs" />
     <Compile Include="Objects\ObjectTree.cs" />
     <Compile Include="Pathfinding\AStarPathFinder.cs" />
     <Compile Include="Pathfinding\CostMatrix.cs" />

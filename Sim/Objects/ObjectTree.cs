@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sim.Const;
+using Sim.Items;
 using Sim.Structs;
 
 namespace Sim.Objects
@@ -20,6 +21,13 @@ namespace Sim.Objects
             AddCapability(living);
             
             AddCapability(new CapabilityCollision(new List<CollisionLayers>() { CollisionLayers.Default }));
+            AddCapability(new CapabilityMineable(
+                new LootTable()
+                    .AddEntry(Items.Items.ItemWood, 1, 10, 10, 1)
+                    .AddEntry(Items.Items.ItemWood, 2, 20, 5, 1)
+                    .AddEntry(Items.Items.ItemWood, 3, 50, 2, 1)
+                    .AddEntry(Items.Items.ItemWood, 4, 100, 1, 1)
+            ));
         }
 
         private void AfterDamage(object sender, DamageEventArgs e)

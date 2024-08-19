@@ -49,7 +49,7 @@ namespace Sim.Capabilities
 
             var entityLiving = obj.GetCapability<CapabilityLiving>();
 
-            if (entityLiving == null)
+            if (entityLiving == null || entityLiving.IsDead)
             {
                 return false;
             }

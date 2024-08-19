@@ -11,7 +11,7 @@ namespace Sim.Objects
 {
     public abstract class BaseObject : IObject
     {
-        public IList<IRenderable> RenderableChildren => renderableChildren;
+        public IList<IRenderable> RenderableChildren { get; } = new List<IRenderable>();
 
         private Vec3d position = Vec3d.Zero;
         public Vec3d Position
@@ -28,27 +28,25 @@ namespace Sim.Objects
             }
         }
 
-        public IList<ICapability> Capabilities => new List<ICapability>();
+        public IList<ICapability> Capabilities { get; } = new List<ICapability>();
 
         public World.World World { get; set; }
 
-        private IList<IRenderable> renderableChildren = new List<IRenderable>();
-        private IList<ICapability> capabilities = new List<ICapability>();
-
         public void AddCapability(ICapability capability)
         {
-            if (capabilities.Any(c => c.GetType() == capability.GetType()))
+            if (Capabilities.Any(c => c.GetType() == capability.GetType()))
             {
                 return;
             }
 
             capability.Object = this;
-            capabilities.Add(capability);
+            Capabilities.Add(capability);
+            capability.OnAttached();
         }
 
         public T GetCapability<T>() where T : ICapability
         {
-            return capabilities.OfType<T>().FirstOrDefault();
+            return Capabilities.OfType<T>().FirstOrDefault();
         }
 
         public bool HasCapability<T>() where T : ICapability

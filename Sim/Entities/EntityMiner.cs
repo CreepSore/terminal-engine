@@ -31,6 +31,7 @@ namespace Sim.Entities
             AddCapability(new CapabilityLiving(100));
             AddCapability(new CapabilityWalking());
             AddCapability(new CapabilityAttack(1.0f, 1.0f));
+            AddCapability(new CapabilityInventory(32));
 
             stateMachine = new StateMachine(this);
             stateMachine.AddState(new StateFind(FilterObjects, OnObjectFound));

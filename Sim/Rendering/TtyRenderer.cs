@@ -85,6 +85,11 @@ namespace Sim.Rendering
                 renderChar('M', renderable.Position, buffer);
             }
 
+            if (renderable is ObjectItemBag)
+            {
+                renderChar('I', renderable.Position, buffer);
+            }
+
             if(renderable.RenderableChildren != null)
             {
                 foreach(var renderableChild in renderable.RenderableChildren)
