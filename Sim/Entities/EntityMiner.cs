@@ -24,7 +24,7 @@ namespace Sim.Entities
         private readonly CapabilityCollision collision = new CapabilityCollision(new List<CollisionLayers>() { CollisionLayers.Default });
         private readonly CapabilityLiving living = new CapabilityLiving(100);
         private readonly CapabilityWalking walking = new CapabilityWalking() {NoLimits = true};
-        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1000.0f) {NoLimits = true};
+        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1.0f) {NoLimits = true};
         private readonly CapabilityInventory inventory = new CapabilityInventory(32);
         private readonly CapabilityCrafting craft = new CapabilityCrafting(Items.Items.GetAll());
         private readonly CapabilityBuild build = new CapabilityBuild();
