@@ -269,6 +269,11 @@ namespace Sim.World
         {
             return GetCapabilityObjects(position).Where(wc => wc.HasCapability<CapabilityType>());
         }
+
+        public IEnumerable<ICapabilityObject> HasCapabilityObjectAt<CapabilityType>(Vec3d position, Func<ICapabilityObject, bool> filter) where CapabilityType : ICapability
+        {
+            return GetCapabilityObjects<CapabilityType>(position).Where(filter);
+        }
         #endregion
 
         public void HandlePositionChanged(ICapabilityObject capabilityObject, Vec3d newPosition)

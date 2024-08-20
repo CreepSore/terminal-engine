@@ -69,9 +69,13 @@ namespace Sim.Rendering
 
             if(renderable is TextRenderable textRenderable)
             {
-                for(int i = 0; i < textRenderable.Text.Length; i++)
+                // ! We have to do this because if the text gets changed in the tick loop
+                // ! there's a chance that the length changes too.
+                // ! If this happens during rendering, we will crash.
+                var text = textRenderable.Text;
+                for(int i = 0; i < text.Length; i++)
                 {
-                    renderChar(textRenderable.Text[i], textRenderable.Position + new Vec3d(i, 0, 0), buffer);
+                    renderChar(text[i], textRenderable.Position + new Vec3d(i, 0, 0), buffer);
                 }
             }
 
@@ -88,6 +92,11 @@ namespace Sim.Rendering
             if (renderable is ObjectItemBag)
             {
                 renderChar('I', renderable.Position, buffer);
+            }
+
+            if (renderable is ObjectChest)
+            {
+                renderChar('C', renderable.Position, buffer);
             }
 
             if(renderable.RenderableChildren != null)

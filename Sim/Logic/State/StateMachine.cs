@@ -10,23 +10,20 @@ namespace Sim.Logic.State
 {
     public class StateMachine : ITickable
     {
-        private HashSet<IState> states = new HashSet<IState>();
+        private readonly HashSet<IState> states = new HashSet<IState>();
         private IState currentState;
 
-        private IEntity entity;
-        private IObject obj;
-
-        public IEntity Entity => entity;
-        public IObject Object => obj;
+        public IEntity Entity { get; }
+        public IObject Object { get; }
 
         public StateMachine(IEntity entity)
         {
-            this.entity = entity;
+            this.Entity = entity;
         }
 
         public StateMachine(IObject obj)
         {
-            this.obj = obj;
+            this.Object = obj;
         }
 
         public StateMachine AddState<T>(T state) where T : IState
@@ -36,8 +33,8 @@ namespace Sim.Logic.State
                 return this;
             }
 
-            state.Entity = entity;
-            state.Object = obj;
+            state.Entity = Entity;
+            state.Object = Object;
             states.Add(state);
 
             return this;

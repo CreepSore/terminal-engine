@@ -34,6 +34,8 @@ namespace Sim
 
             worldRegistry.Add(mainWorld);
 
+            timer.FastForward = 1;
+
             while(IsRunning)
             {
                 var tickCount = timer.ShouldTick();

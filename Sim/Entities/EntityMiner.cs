@@ -21,20 +21,31 @@ namespace Sim.Entities
 
         private ObjectTree target;
 
+        private readonly CapabilityCollision collision = new CapabilityCollision(new List<CollisionLayers>() { CollisionLayers.Default });
+        private readonly CapabilityLiving living = new CapabilityLiving(100);
+        private readonly CapabilityWalking walking = new CapabilityWalking();
+        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1.0f);
+        private readonly CapabilityInventory inventory = new CapabilityInventory(32);
+        private readonly CapabilityCrafting craft = new CapabilityCrafting(Items.Items.GetAll());
+        private readonly CapabilityBuild build = new CapabilityBuild();
+
         public EntityMiner(Vec3d position)
         {
             Position = position;
 
             RenderableChildren.Add(debugText);
 
-            AddCapability(new CapabilityCollision(new List<CollisionLayers>() { CollisionLayers.Default }));
-            AddCapability(new CapabilityLiving(100));
-            AddCapability(new CapabilityWalking());
-            AddCapability(new CapabilityAttack(1.0f, 1.0f));
-            AddCapability(new CapabilityInventory(32));
+            AddCapability(collision);
+            AddCapability(living);
+            AddCapability(walking);
+            AddCapability(attack);
+            AddCapability(inventory);
+            AddCapability(craft);
+            AddCapability(build);
 
             stateMachine = new StateMachine(this);
-            stateMachine.AddState(new StateFind(FilterObjects, OnObjectFound));
+            stateMachine.AddState(new StateIdle());
+            stateMachine.AddState(new StateFind(FilterObjects, OnObjectFound, OnSearchFailed));
             stateMachine.AddState(new StateWalking(OnDestinationReached));
             stateMachine.AddState(new StateAttack());
         }
@@ -43,8 +54,18 @@ namespace Sim.Entities
         {
             TickCapabilities();
 
+            if (inventory.Stacks.Count / (double)inventory.MaximumStacks > 0.75)
+            {
+                if (craft.CraftItems(Items.Items.ItemChest) != null)
+                {
+                    if (build.PlaceItem(Items.Items.ItemChest, Position, false) is ObjectChest placedObject)
+                    {
+                        inventory.TransferFullInventory(placedObject.GetCapability<CapabilityInventory>());
+                    }
+                }
+            }
 
-            if (target?.World == null)
+            if (target?.World == null && !(stateMachine.GetCurrentState<IState>() is StateIdle))
             {
                 stateMachine.SwitchState<StateFind>();
             }
@@ -68,11 +89,13 @@ namespace Sim.Entities
 
         private bool FilterObjects(IObject obj)
         {
+            var collision = GetCapability<CapabilityCollision>();
+
             return obj is ObjectTree && !(
-                World.HasPositionObjectAt(obj.Position + Vec3d.Up, po => po != this)
-                && World.HasPositionObjectAt(obj.Position + Vec3d.Right, po => po != this)
-                && World.HasPositionObjectAt(obj.Position + Vec3d.Down, po => po != this)
-                && World.HasPositionObjectAt(obj.Position + Vec3d.Left, po => po != this)
+                World.HasCapabilityObjectAt<CapabilityCollision>(obj.Position + Vec3d.Up, co => co != this && co.GetCapability<CapabilityCollision>().CanCollideWith(collision)).Any()
+                && World.HasCapabilityObjectAt<CapabilityCollision>(obj.Position + Vec3d.Right, co => co != this && co.GetCapability<CapabilityCollision>().CanCollideWith(collision)).Any()
+                && World.HasCapabilityObjectAt<CapabilityCollision>(obj.Position + Vec3d.Down, co => co != this && co.GetCapability<CapabilityCollision>().CanCollideWith(collision)).Any()
+                && World.HasCapabilityObjectAt<CapabilityCollision>(obj.Position + Vec3d.Left, co => co != this && co.GetCapability<CapabilityCollision>().CanCollideWith(collision)).Any()
             );
         }
 
@@ -87,6 +110,11 @@ namespace Sim.Entities
                     .SetTargetPosition(target.Position)
                     .SetMaximumDistanceToTarget(1);
             }
+        }
+
+        private void OnSearchFailed()
+        {
+            stateMachine.SwitchState<StateIdle>();
         }
     }
 }

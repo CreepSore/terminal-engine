@@ -6,5 +6,6 @@
         Resources = 1,
         BuildingMaterials = 2,
         CraftingMaterials = 3,
+        Container = 4,
     }
 }

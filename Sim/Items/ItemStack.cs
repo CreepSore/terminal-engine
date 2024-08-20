@@ -6,16 +6,23 @@ using System.Threading.Tasks;
 
 namespace Sim.Items
 {
-    public class ItemStack
+    public class ItemStack : ItemStack<IItem>
+    {
+        public ItemStack(IItem item, int amount) : base(item, amount)
+        {
+        }
+    }
+
+    public class ItemStack<T> where T : IItem
     {
         public const int DefaultMaximumAmount = 64;
 
         public int MaxAmount { get; }
 
-        public Item Item { get; }
+        public T Item { get; }
         public int Amount { get; set; }
 
-        public ItemStack(Item item, int amount)
+        public ItemStack(T item, int amount)
         {
             Item = item;
             Amount = amount;
@@ -33,7 +40,7 @@ namespace Sim.Items
             return delta < 0 ? -delta : 0;
         }
 
-        public ItemStack Remove(int amount)
+        public ItemStack<T> Remove(int amount)
         {
             var removable = Math.Min(amount, Amount);
             var remaining = Amount - amount;
@@ -45,7 +52,7 @@ namespace Sim.Items
 
             Amount = remaining;
 
-            return new ItemStack(Item, removable);
+            return new ItemStack<T>(Item, removable);
         }
     }
 }

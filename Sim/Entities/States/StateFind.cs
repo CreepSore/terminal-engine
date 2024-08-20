@@ -19,19 +19,22 @@ namespace Sim.Entities.states
 
         private readonly Action<IObject> onObjectFound;
         private readonly Action<IEntity> onEntityFound;
+        private readonly Action onSearchFailed;
         private readonly Func<IObject, bool> filterObject;
         private readonly Func<IEntity, bool> filterEntity;
 
-        public StateFind(Func<IObject, bool> filterObject, Action<IObject> onObjectFound)
+        public StateFind(Func<IObject, bool> filterObject, Action<IObject> onObjectFound, Action onSearchFailed = null)
         {
             this.onObjectFound = onObjectFound;
             this.filterObject = filterObject;
+            this.onSearchFailed = onSearchFailed;
         }
 
-        public StateFind(Func<IEntity, bool> filterEntity, Action<IEntity> onEntityFound)
+        public StateFind(Func<IEntity, bool> filterEntity, Action<IEntity> onEntityFound, Action onSearchFailed = null)
         {
             this.onEntityFound = onEntityFound;
             this.filterEntity = filterEntity;
+            this.onSearchFailed = onSearchFailed;
         }
 
         public void Tick()
@@ -43,6 +46,10 @@ namespace Sim.Entities.states
                 {
                     onObjectFound(foundObject);
                 }
+                else
+                {
+                    onSearchFailed?.Invoke();
+                }
             }
             else if(onEntityFound != null && filterEntity != null)
             {
@@ -50,6 +57,10 @@ namespace Sim.Entities.states
                 if (foundEntity != null)
                 {
                     onEntityFound(foundEntity);
+                }
+                else
+                {
+                    onSearchFailed?.Invoke();
                 }
             }
         }
@@ -64,17 +75,10 @@ namespace Sim.Entities.states
 
         private IEntity FindEntity()
         {
-            var entities = new List<IEntity>(PositionObject.World.GetEntities());
-            entities.Sort((a, b) => {
-                var distance = a.Position.Distance2d(PositionObject.Position)
-                    - b.Position.Distance2d(PositionObject.Position);
-
-                if (distance < 0) return -1;
-                if (distance > 0) return 1;
-
-                return 0;
-            });
-            return entities.FirstOrDefault(filterEntity);
+            return new List<IEntity>(PositionObject.World.GetEntities())
+                .OrderBy(a => a.Position.Distance2d(PositionObject.Position))
+                .Where(filterEntity)
+                .FirstOrDefault();
         }
     }
 }

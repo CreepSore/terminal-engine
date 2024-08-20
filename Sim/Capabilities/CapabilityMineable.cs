@@ -59,7 +59,10 @@ namespace Sim.Capabilities
                 }
             }
 
-            attacker.World.SpawnObject(new ObjectItemBag(drops, PositionObject.Position), null, false);
+            if (stacksToDrop.Count > 0)
+            {
+                attacker.World.SpawnObject(new ObjectItemBag(drops, PositionObject.Position), null, false);
+            }
         }
 
         public override void Tick()

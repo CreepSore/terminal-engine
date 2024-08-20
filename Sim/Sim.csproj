@@ -60,6 +60,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Capabilities\CapabilityBuild.cs" />
+    <Compile Include="Capabilities\CapabilityCrafting.cs" />
     <Compile Include="Capabilities\CapabilityInventory.cs" />
     <Compile Include="Capabilities\CapabilityAttack.cs" />
     <Compile Include="Capabilities\BaseCapability.cs" />
@@ -80,9 +82,12 @@
     <Compile Include="Entities\IEntity.cs" />
     <Compile Include="Entities\States\StateAttack.cs" />
     <Compile Include="Entities\States\StateFind.cs" />
+    <Compile Include="Entities\States\StateIdle.cs" />
     <Compile Include="Entities\States\StateWalking.cs" />
     <Compile Include="Entities\utils\EntityTimerDisplay.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="Items\BuildableItem.cs" />
+    <Compile Include="Items\CraftingRecipes.cs" />
     <Compile Include="Items\IItem.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemCategory.cs" />
@@ -97,6 +102,7 @@
     <Compile Include="Logic\Timer.cs" />
     <Compile Include="Objects\BaseObject.cs" />
     <Compile Include="Objects\IObject.cs" />
+    <Compile Include="Objects\ObjectChest.cs" />
     <Compile Include="Objects\ObjectItemBag.cs" />
     <Compile Include="Objects\ObjectTree.cs" />
     <Compile Include="Pathfinding\AStarPathFinder.cs" />

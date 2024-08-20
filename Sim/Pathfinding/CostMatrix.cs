@@ -67,9 +67,8 @@ namespace Sim.Pathfinding
             {
                 if (!world.IsWalkable(positionObject.Position, colLayers))
                 {
-                    continue;
+                    costMatrix.SetUnwalkable(positionObject.Position);
                 }
-                costMatrix.SetUnwalkable(positionObject.Position);
             }
 
             return costMatrix;

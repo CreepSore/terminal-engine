@@ -10,7 +10,7 @@ namespace Sim.Items
     public class LootTable
     {
         private readonly Random random;
-        public Dictionary<Item, IList<LootTableEntry>> Table { get; } = new Dictionary<Item, IList<LootTableEntry>>();
+        public Dictionary<IItem, IList<LootTableEntry>> Table { get; } = new Dictionary<IItem, IList<LootTableEntry>>();
 
         public LootTable(int? seed = null)
         {
@@ -28,7 +28,7 @@ namespace Sim.Items
         /// <param name="chance">Chance from 0 to 100</param>
         /// <param name="amount">The amount dropped</param>
         /// <param name="group">The drop group. Grouped entries can only drop once per group.</param>
-        public LootTable AddEntry(Item item, int priority, int chance, int amount, int? group = null)
+        public LootTable AddEntry(IItem item, int priority, int chance, int amount, int? group = null)
         {
             if (!Table.ContainsKey(item))
             {
@@ -45,7 +45,7 @@ namespace Sim.Items
             return this;
         }
 
-        public IList<ItemStack> GetDrops(Item item)
+        public IList<ItemStack> GetDrops(IItem item)
         {
             var drops = new List<ItemStack>();
             var potentialDrops = Table[item].OrderBy(e => e.Priority);
