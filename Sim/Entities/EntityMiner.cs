@@ -23,8 +23,8 @@ namespace Sim.Entities
 
         private readonly CapabilityCollision collision = new CapabilityCollision(new List<CollisionLayers>() { CollisionLayers.Default });
         private readonly CapabilityLiving living = new CapabilityLiving(100);
-        private readonly CapabilityWalking walking = new CapabilityWalking();
-        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1.0f);
+        private readonly CapabilityWalking walking = new CapabilityWalking() {NoLimits = true};
+        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1.0f) {NoLimits = true};
         private readonly CapabilityInventory inventory = new CapabilityInventory(32);
         private readonly CapabilityCrafting craft = new CapabilityCrafting(Items.Items.GetAll());
         private readonly CapabilityBuild build = new CapabilityBuild();
@@ -48,6 +48,7 @@ namespace Sim.Entities
             stateMachine.AddState(new StateFind(FilterObjects, OnObjectFound, OnSearchFailed));
             stateMachine.AddState(new StateWalking(OnDestinationReached));
             stateMachine.AddState(new StateAttack());
+            stateMachine.SwitchState<StateFind>();
         }
 
         public override void Tick()
@@ -65,15 +66,15 @@ namespace Sim.Entities
                 }
             }
 
-            if (target?.World == null && !(stateMachine.GetCurrentState<IState>() is StateIdle))
-            {
-                stateMachine.SwitchState<StateFind>();
-            }
-
             debugText.World = World;
             debugText.Text = stateMachine.GetCurrentState<IState>().GetType().Name;
 
             stateMachine.Tick();
+
+            if (target?.World == null && !(stateMachine.GetCurrentState<IState>() is StateIdle))
+            {
+                stateMachine.SwitchState<StateFind>();
+            }
         }
 
         private void OnDestinationReached()
@@ -104,11 +105,21 @@ namespace Sim.Entities
             target = obj as ObjectTree;
             if (target != null)
             {
+                if (attack.InRangeTo(target.Position))
+                {
+                    stateMachine
+                        .SwitchState<StateAttack>()
+                        .GetState<StateAttack>()
+                        .SetTarget(target);
+
+                    return;
+                }
+
                 stateMachine
                     .SwitchState<StateWalking>()
                     .GetState<StateWalking>()
                     .SetTargetPosition(target.Position)
-                    .SetMaximumDistanceToTarget(1);
+                    .SetMaximumDistanceToTarget(attack.Range);
             }
         }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sim.Objects;
+using Sim.Structs;
 
 namespace Sim.Capabilities
 {
@@ -13,6 +14,7 @@ namespace Sim.Capabilities
     {
         public float AttackSpeed { get; set; }
         public float Range { get; set; }
+        public bool NoLimits { get; set; } = false;
 
         private int idleTicks = 0;
 
@@ -30,7 +32,7 @@ namespace Sim.Capabilities
 
                 if (idleTicks < 0)
                 {
-                    this.idleTicks = 0;
+                    idleTicks = 0;
                 }
             }
         }
@@ -73,9 +75,14 @@ namespace Sim.Capabilities
             return true;
         }
 
+        public bool InRangeTo(Vec3d position)
+        {
+            return PositionObject.Position.Distance2d(position) <= Range;
+        }
+
         public bool CanAttackNow()
         {
-            return idleTicks <= 0;
+            return NoLimits || idleTicks <= 0;
         }
     }
 }

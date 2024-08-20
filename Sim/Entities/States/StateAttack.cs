@@ -34,7 +34,7 @@ namespace Sim.Entities.States
                 return;
             }
 
-            attack.Attack(target, 20, DamageType.Punch);
+            attack.Attack(target, 100, DamageType.Punch);
         }
 
         public void SetTarget(IObject target)
