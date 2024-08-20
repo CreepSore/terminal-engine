@@ -43,12 +43,12 @@ namespace Sim.Entities
             AddCapability(craft);
             AddCapability(build);
 
-            stateMachine = new StateMachine(this);
-            stateMachine.AddState(new StateIdle());
-            stateMachine.AddState(new StateFind(FilterObjects, OnObjectFound, OnSearchFailed));
-            stateMachine.AddState(new StateWalking(OnDestinationReached));
-            stateMachine.AddState(new StateAttack());
-            stateMachine.SwitchState<StateFind>();
+            stateMachine = new StateMachine(this)
+                .AddState(new StateIdle())
+                .AddState(new StateFind(FilterObjects, OnObjectFound, OnSearchFailed))
+                .AddState(new StateWalking(OnDestinationReached))
+                .AddState(new StateAttack())
+                .SwitchState<StateFind>();
         }
 
         public override void Tick()
@@ -85,7 +85,10 @@ namespace Sim.Entities
                 return;
             }
 
-            stateMachine.SwitchState<StateAttack>().GetState<StateAttack>().SetTarget(target);
+            stateMachine
+                .SwitchState<StateAttack>()
+                .GetState<StateAttack>()
+                .SetTarget(target);
         }
 
         private bool FilterObjects(IObject obj)
@@ -103,24 +106,26 @@ namespace Sim.Entities
         private void OnObjectFound(IObject obj)
         {
             target = obj as ObjectTree;
-            if (target != null)
+            if (target == null)
             {
-                if (attack.InRangeTo(target.Position))
-                {
-                    stateMachine
-                        .SwitchState<StateAttack>()
-                        .GetState<StateAttack>()
-                        .SetTarget(target);
-
-                    return;
-                }
-
-                stateMachine
-                    .SwitchState<StateWalking>()
-                    .GetState<StateWalking>()
-                    .SetTargetPosition(target.Position)
-                    .SetMaximumDistanceToTarget(attack.Range);
+                return;
             }
+
+            if (attack.InRangeTo(target.Position))
+            {
+                stateMachine
+                    .SwitchState<StateAttack>()
+                    .GetState<StateAttack>()
+                    .SetTarget(target);
+
+                return;
+            }
+
+            stateMachine
+                .SwitchState<StateWalking>()
+                .GetState<StateWalking>()
+                .SetTargetPosition(target.Position)
+                .SetMaximumDistanceToTarget(attack.Range);
         }
 
         private void OnSearchFailed()
