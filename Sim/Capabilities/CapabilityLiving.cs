@@ -38,11 +38,6 @@ namespace Sim.Capabilities
                 : maximumHealth;
         }
 
-        public override void Tick()
-        {
-
-        }
-
         public bool Damage(double damage, DamageType damageType, IEntity attacker)
         {
             BeforeDamage?.Invoke(this, new DamageEventArgs { Damage = damage, DamageType = damageType, EntityAttacker = attacker });

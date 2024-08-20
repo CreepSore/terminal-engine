@@ -146,10 +146,5 @@ namespace Sim.Capabilities
                 .Select(s => s.Amount)
                 .Sum() >= amount;
         }
-
-        public override void Tick()
-        {
-            
-        }
     }
 }

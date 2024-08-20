@@ -64,10 +64,5 @@ namespace Sim.Capabilities
                 attacker.World.SpawnObject(new ObjectItemBag(drops, PositionObject.Position), null, false);
             }
         }
-
-        public override void Tick()
-        {
-
-        }
     }
 }

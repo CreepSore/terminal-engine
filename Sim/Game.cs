@@ -30,7 +30,7 @@ namespace Sim
 
             new FillWorldPopulator(mainWorld).Populate();
 
-            mainWorld.SpawnEntity(new EntityMiner(new Vec3d(1, 1, 0)));
+            mainWorld.SpawnEntity(new EntityMiner(new Vec3d(mainWorld.Width - 1, 0, 0)));
 
             worldRegistry.Add(mainWorld);
 

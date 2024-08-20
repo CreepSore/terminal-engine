@@ -17,7 +17,11 @@ namespace Sim.Capabilities
         public IEntity Entity { get; set; }
         public IObject Object { get; set; }
 
-        public abstract void Tick();
+        public virtual void Tick()
+        {
+
+        }
+
         public virtual void OnAttached()
         {
             

@@ -16,7 +16,7 @@ namespace Sim.Entities
 {
     public class EntityMiner : BaseEntity
     {
-        private TextRenderable debugText = new TextRenderable("", new Vec3d(10, 0, 0), null);
+        private readonly TextRenderable debugText = new TextRenderable("", new Vec3d(10, 0, 0), null);
         private readonly StateMachine stateMachine;
 
         private ObjectTree target;
@@ -24,7 +24,7 @@ namespace Sim.Entities
         private readonly CapabilityCollision collision = new CapabilityCollision(new List<CollisionLayers>() { CollisionLayers.Default });
         private readonly CapabilityLiving living = new CapabilityLiving(100);
         private readonly CapabilityWalking walking = new CapabilityWalking() {NoLimits = true};
-        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1.0f) {NoLimits = true};
+        private readonly CapabilityAttack attack = new CapabilityAttack(1.0f, 1000.0f) {NoLimits = true};
         private readonly CapabilityInventory inventory = new CapabilityInventory(32);
         private readonly CapabilityCrafting craft = new CapabilityCrafting(Items.Items.GetAll());
         private readonly CapabilityBuild build = new CapabilityBuild();
@@ -67,7 +67,7 @@ namespace Sim.Entities
             }
 
             debugText.World = World;
-            debugText.Text = stateMachine.GetCurrentState<IState>().GetType().Name;
+            debugText.Text = stateMachine.GetCurrentState<IState>().GetType().Name + " " + inventory.Stacks.Count;
 
             stateMachine.Tick();
 

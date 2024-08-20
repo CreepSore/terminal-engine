@@ -16,11 +16,6 @@ namespace Sim.Capabilities
             CraftableItems = craftableItems ?? new List<IItem>();
         }
 
-        public override void Tick()
-        {
-            
-        }
-
         public ItemStack CraftItems(IItem item)
         {
             if (!CanCraft(item, out var recipe))

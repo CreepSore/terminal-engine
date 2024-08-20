@@ -11,8 +11,8 @@ namespace Sim.Entities.utils
 {
     public class EntityTimerDisplay : BaseEntity
     {
-        private Timer timer;
-        private TextRenderable textRenderable = new TextRenderable("", Vec3d.Zero, null);
+        private readonly Timer timer;
+        private readonly TextRenderable textRenderable = new TextRenderable("", Vec3d.Zero, null);
 
         public EntityTimerDisplay(Vec3d position, Timer timer)
         {

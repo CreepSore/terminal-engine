@@ -36,11 +36,6 @@ namespace Sim.Capabilities
             Layers = layers;
         }
 
-        public override void Tick()
-        {
-            
-        }
-
         public bool CanCollideWith(CapabilityCollision collision)
         {
             return CanCollideWith(collision.Layers);

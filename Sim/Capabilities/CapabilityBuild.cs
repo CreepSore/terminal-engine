@@ -11,11 +11,6 @@ namespace Sim.Capabilities
 {
     public class CapabilityBuild : BaseCapability
     {
-        public override void Tick()
-        {
-            
-        }
-
         public IObject PlaceItem<T>(T item, Vec3d position, bool forcePosition = false) where T : BuildableItem
         {
             var inventory = CapabilityObject.GetCapability<CapabilityInventory>();
@@ -71,7 +66,7 @@ namespace Sim.Capabilities
             return position
                 .GetNeighbors()
                 .OfType<Vec3d?>()
-                .FirstOrDefault(n => !PositionObject.World.HasPositionObjectAt((Vec3d)n));
+                .FirstOrDefault(n => !PositionObject.World.HasPositionObjectAt((Vec3d)n) && PositionObject.World.InBounds((Vec3d)n));
         }
     }
 }

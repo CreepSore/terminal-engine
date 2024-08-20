@@ -15,9 +15,9 @@ namespace Sim.World
 {
     public class World : ITickable, IRenderable
     {
-        public IList<IRenderable> RenderableChildren => renderables;
+        public IList<IRenderable> RenderableChildren { get; } = new List<IRenderable>();
+
         public Vec3d Position { get; set; } = Vec3d.Zero;
-        private readonly IList<IRenderable> renderables = new List<IRenderable>();
         private readonly IList<IEntity> entities = new List<IEntity>();
         private readonly IList<IObject> objects = new List<IObject>();
         private readonly IList<IWithPosition> positionObjects = new List<IWithPosition>();
@@ -83,7 +83,7 @@ namespace Sim.World
             entities.Add(entity);
             positionObjects.Add(entity);
             capabilityObjects.Add(entity);
-            renderables.Add(entity);
+            RenderableChildren.Add(entity);
             if (!capabilityObjectMatrix.ContainsKey(entity.Position))
             {
                 capabilityObjectMatrix[entity.Position] = new List<ICapabilityObject>();
@@ -130,7 +130,7 @@ namespace Sim.World
             objects.Add(obj);
             positionObjects.Add(obj);
             capabilityObjects.Add(obj);
-            renderables.Add(obj);
+            RenderableChildren.Add(obj);
             if (!capabilityObjectMatrix.ContainsKey(obj.Position))
             {
                 capabilityObjectMatrix[obj.Position] = new List<ICapabilityObject>();
@@ -152,7 +152,7 @@ namespace Sim.World
             entities.Remove(entity);
             positionObjects.Remove(entity);
             capabilityObjects.Remove(entity);
-            renderables.Remove(entity);
+            RenderableChildren.Remove(entity);
             capabilityObjectMatrix[entity.Position].Remove(entity);
 
             return this;
@@ -170,7 +170,7 @@ namespace Sim.World
             objects.Remove(obj);
             positionObjects.Remove(obj);
             capabilityObjects.Remove(obj);
-            renderables.Remove(obj);
+            RenderableChildren.Remove(obj);
             capabilityObjectMatrix[obj.Position].Remove(obj);
 
             return this;
@@ -299,6 +299,12 @@ namespace Sim.World
             return !GetCapabilityObjects<CapabilityCollision>(position)
                 .Select(co => co.GetCapability<CapabilityCollision>())
                 .Any(c => c.CanCollideWith(toCheck));
+        }
+
+        public bool InBounds(Vec3d vec3d)
+        {
+            return vec3d.X >= 0 || vec3d.Y >= 0
+                || vec3d.X < Width || vec3d.Y < Height;
         }
     }
 }
